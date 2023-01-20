@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 
 <head>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Postgres in browser</title>
   <link rel="stylesheet" href="https://unpkg.com/xterm@4.19.0/css/xterm.css" />
   <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js"></script>
   <script src="https://unpkg.com/xterm-addon-fit@0.5.0/lib/xterm-addon-fit.js"></script>
   <script src="https://unpkg.com/xterm@4.19.0/lib/xterm.js"></script>
   <script src="./lib/libv86.js"></script>
@@ -28,6 +30,43 @@
 
       const params = new URL(document.location).searchParams;
       const boot = params.get("boot") === "true";
+      const sql = params.get("sql");
+      const md = params.get("md");
+
+      if (sql) {
+        fetch(sql, { method: 'GET' }).then(
+          async i => {
+            if (!i.ok) throw new Error("Failed to fetch file");
+            let m = new Uint8Array(await i.arrayBuffer());
+            emulator.add_listener("emulator-ready", function () {
+              initTerm();
+              setTimeout(() => {
+                emulator.create_file("/mnt/data.sql", m);
+              }, 0);
+              setTimeout(() => {
+                emulator.serial0_send(`\\i /mnt/data.sql\n`);
+              }, 0);
+            });
+          }).catch(
+            e => console.error(e)
+          );
+      }
+
+      if (md) {
+        const app = document.querySelector('zero-md')
+        const run = async () => {
+          app.src = md
+          await app.render({
+            // The class `line-numbers` will be added to the markdown-body container
+            classes: 'line-numbers',
+            // These are Marked options
+            gfm: false,
+            mangle: false
+          })
+
+        }
+        run()
+      }
 
       if (boot) {
         document.getElementById("screen_container").style = "display:block";
@@ -166,24 +205,34 @@
     <div></div>
     <canvas></canvas>
   </div>
-  <div id="menu">
-    <div>
-      <input id="save_restore" type="button" value="Save state" />
-      <input id="save_file" type="button" value="Save state to file" />
-    </div>
-    <div style="display: flex">
-      <div class="upload-btn">
-        <input id="restore_file" type="file" hidden />
-        <p>Restore from file</p>
-      </div>
-      <div class="upload-btn">
-        <input id="upload_files" type="file" multiple hidden />
-        <p>Upload files to the emulator</p>
-      </div>
-    </div>
-  </div>
   <div class="container">
-    <div class="xterminal">
+    <zero-md
+      manual-render="true">
+      <template>
+        <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-dark.min.css" />
+        <style>
+          :host {
+            display: block;
+            position: relative;
+            contain: content;
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0px;
+            width: calc(50% - 20px * 2);
+            height: 100vh;
+            overflow: scroll;
+          }
+
+          .markdown-body {
+            height: inherit;
+          }
+        </style>
+      </template>
+    </zero-md>
+    <div class="xterminal" style="width: calc(50% + 16px * 2); height: calc(100% - 18px * 2 );">
       <div id="terminal"></div>
     </div>
   </div>
