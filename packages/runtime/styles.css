@@ -1,7 +1,6 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #252735;
 }
 
 .container {
@@ -10,6 +9,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #1a1b20;
 }
 
 input[type="button"] {
