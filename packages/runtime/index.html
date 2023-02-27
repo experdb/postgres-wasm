@@ -197,14 +197,6 @@
         });
       }
     };
-
-
-    function copyCode(num) {
-      const shadowContainer = document.getElementById('container').shadowRoot;
-      const codes = shadowContainer.querySelectorAll('code');
-      
-      window.navigator.clipboard.writeText(codes[num].textContent);
-    }
   </script>
 </head>
 
@@ -214,7 +206,7 @@
     <canvas></canvas>
   </div>
   <div class="container">
-    <zero-md id="container"
+    <zero-md
       manual-render="true">
       <template>
         <link rel="stylesheet"
@@ -226,73 +218,21 @@
             contain: content;
             box-sizing: border-box;
             min-width: 200px;
-            max-width: 850px;
+            max-width: 980px;
             margin: 0 auto;
             padding: 0px;
             width: calc(50% - 20px * 2);
             height: 100vh;
             overflow: scroll;
-            
           }
 
           .markdown-body {
             height: inherit;
-            font-size: small;
           }
-
-          h1{
-            color: white;
-            padding: 20px 20px;
-          }
-
-          ol>li{
-            margin-left: 30px;
-            font-size: 1.2em;
-          }
-
-          pre{
-            width: 80%;
-            margin-left: 60px;
-            border: 1px solid rgb(124, 124, 124);
-          }
-          
-          p{
-            margin-left: 40px;
-          }
-
-          strong{
-            color: rgb(38, 114, 255);
-          }
-
-          img{
-            margin-left: 20px;
-            width: 90%
-          }
-
-          span{
-            color: rgb(86, 117, 255);
-          }
-          
-          button{
-            position: absolute;
-            margin-left: 78%;
-            margin-top: 20px;
-            width: 45px;
-            height: 30px;
-            background-color: rgb(0, 89, 255);
-            border: 1px solid rgb(0, 89, 255);
-            border-radius: 0.4em;
-          }
-
-          button:hover{
-            background-color: rgb(0, 58, 167);
-            border: rgb(0, 58, 167);
-          }
-        
         </style>
       </template>
     </zero-md>
-    <div class="xterminal" style="width: calc(60% + 16px * 2); height: calc(100% - 18px * 2 );">
+    <div class="xterminal" style="width: calc(50% + 16px * 2); height: calc(100% - 18px * 2 );">
       <div id="terminal"></div>
     </div>
   </div>
