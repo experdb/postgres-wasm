@@ -200,18 +200,32 @@
 
 
     function copyCode(num) {
-      const shadowContainer = document.getElementById('container').shadowRoot;
-      const codes = shadowContainer.querySelectorAll('code');
-      
-      window.navigator.clipboard.writeText(codes[num].textContent);
+  const shadowContainer = document.getElementById('container').shadowRoot;
+  const codes = shadowContainer.querySelectorAll('code');
+  const btnElement = shadowContainer.querySelectorAll('button');
 
-      const btnElement = shadowContainer.querySelectorAll('button');
-      btnElement[num].innerText = 'copied';
+  // Create a temporary textarea element to copy the text to
+  const tempTextArea = document.createElement('textarea');
+  tempTextArea.value = codes[num].textContent;
+  shadowContainer.appendChild(tempTextArea);
 
-      setTimeout(function() { 
-        btnElement[num].innerText = 'copy';
-      }, 800);
-    }
+  // Select the text in the textarea and execute the copy command
+  tempTextArea.select();
+  document.execCommand('copy');
+
+  // Clean up by removing the temporary textarea
+  shadowContainer.removeChild(tempTextArea);
+
+  // Update the button text
+  btnElement[num].innerText = 'copied';
+
+  setTimeout(function() { 
+    btnElement[num].innerText = 'copy';
+  }, 800);
+}
+
+
+
   </script>
 </head>
 
